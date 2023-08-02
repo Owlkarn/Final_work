@@ -14,20 +14,19 @@ import java.util.Scanner;
 public class Main {
     static ArrayList<Pet> MY_PETS = new ArrayList<>();
     static ArrayList<PackAnimal> MY_PACK_ANIMALS = new ArrayList<>();
-    static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         menu();
     }
 
     public static void menu () {
+        Scanner scanner = new Scanner(System.in);
         while (true) {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Р’С‹Р±РµСЂРёС‚Рµ РїСѓРЅРєС‚ РјРµРЅСЋ:\n" +
-                    "1. Р—Р°РІРµСЃС‚Рё РЅРѕРІРѕРµ Р¶РёРІРѕС‚РЅРѕРµ\n" +
-                    "2. РџРѕСЃРјРѕС‚СЂРµС‚СЊ СЃРїРёСЃРѕРє РєРѕРјР°РЅРґ Р¶РёРІРѕС‚РЅРѕРіРѕ\n" +
-                    "3. РћР±СѓС‡РёС‚СЊ Р¶РёРІРѕС‚РЅРѕРµ РЅРѕРІС‹Рј РєРѕРјР°РЅРґР°Рј\n" +
-                    "4. РџРѕСЃРјРѕС‚СЂРµС‚СЊ СЃРїРёСЃРѕРє Р¶РёРІРѕС‚РЅС‹С…");
+            System.out.println("Выберите пункт меню:\n" +
+                    "1. Завести новое животное\n" +
+                    "2. Посмотреть список команд животного\n" +
+                    "3. Обучить животное новым командам\n" +
+                    "4. Посмотреть список животных");
             String command = scanner.nextLine();
 
             switch (command){
@@ -44,7 +43,7 @@ public class Main {
                     watchAnimalList(animalListSelect());
                     break;
                 default:
-                    System.out.println("Р’РІРµРґРµРЅРѕ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ");
+                    System.out.println("Введено некорректное значение");
             }
         }
     }
@@ -60,13 +59,14 @@ public class Main {
     }
 
     public static ArrayList<Animal> animalListSelect() {
+        Scanner scanner = new Scanner(System.in);
         ArrayList<Animal> list = new ArrayList<>();
         String animalType;
 
         do {
-            System.out.println("Р’С‹Р±РµСЂРёС‚Рµ РіСЂСѓРїРїСѓ Р¶РёРІРѕС‚РЅС‹С…:\n" +
-                    "1. Р”РѕРјР°С€РЅРёРµ Р¶РёРІРѕС‚РЅС‹Рµ\n" +
-                    "2. Р’СЊСЋС‡РЅС‹Рµ Р¶РёРІРѕС‚РЅС‹Рµ");
+            System.out.println("Выберите группу животных:\n" +
+                    "1. Домашние животные\n" +
+                    "2. Вьючные животные");
             animalType = scanner.nextLine();
 
             switch (animalType) {
@@ -77,12 +77,12 @@ public class Main {
                     list.addAll(MY_PACK_ANIMALS);
                     break;
                 default:
-                    System.out.println("Р’РІРµРґРµРЅРѕ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ");
+                    System.out.println("Введено некорректное значение");
             }
         } while (!animalType.equals("1") && !animalType.equals("2"));
 
         if (list.size() == 0) {
-            System.out.println("Р’ РґР°РЅРЅРѕРј СЃРїРёСЃРєРµ РµС‰Рµ РЅРµС‚ Р¶РёРІРѕС‚РЅС‹С…");
+            System.out.println("В данном списке еще нет животных");
             return null;
         }
         return list;
@@ -90,7 +90,7 @@ public class Main {
 
     public static Animal selectAnimal (ArrayList<Animal> list) {
         if (list != null) {
-            System.out.println("Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ РЅСѓР¶РЅРѕРіРѕ Р¶РёРІРѕС‚РЅРѕРіРѕ:");
+            System.out.println("Введите номер нужного животного:");
 
             watchAnimalList(list);
 
@@ -101,7 +101,7 @@ public class Main {
                     number = numberCheck(list.size()) - 1;
                     notZero = true;
                 } catch (IllegalArgumentException e) {
-                    System.out.println("РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ РІРІРѕРґ.");
+                    System.out.println("Некорректный ввод.");
                 }
             }
             return list.get(number);
@@ -112,7 +112,7 @@ public class Main {
     public static void watchAnimalCommands (Animal animal) {
         if (animal != null) {
             if (animal.getCommands().getCommands().size() == 0)
-                System.out.println("Р–РёРІРѕС‚РЅРѕРµ РЅРµ Р·РЅР°РµС‚ РєРѕРјР°РЅРґ");
+                System.out.println("Животное не знает команд");
             else {
                 for (Commands command : animal.getCommands().getCommands())
                     System.out.println("- " + command);
@@ -125,49 +125,57 @@ public class Main {
             boolean addingCommands = true;
             ArrayList<Commands> cmd = new ArrayList<>();
             Commands[] allCommands = Commands.values();
-            cmd.addAll(Arrays.asList(allCommands));
-
-            while (addingCommands) {
-                if (animal.getCommands().getCommands().size() == allCommands.length) {
-                    System.out.println("Р–РёРІРѕС‚РЅРѕРµ СѓР¶Рµ Р·РЅР°РµС‚ РІСЃРµ РєРѕРјР°РЅРґС‹");
-                    addingCommands = false;
+            if (animal.getCommands().getCommands().size() != 0) {
+                for (Commands command : allCommands) {
+                    if (!animal.getCommands().getCommands().contains(command)) {
+                        cmd.add(command);
+                    }
                 }
-                else {
-                    System.out.println("Р”РѕСЃС‚СѓРїРЅС‹Рµ РєРѕРјР°РЅРґС‹:");
-                    int i = 1;
-                    for (Commands command : cmd) {
-                        if (!animal.getCommands().getCommands().contains(command)) {
-                            System.out.println(i + ". " + command);
-                            i++;
+            } else {
+                cmd.addAll(Arrays.asList(allCommands));
+            }
+
+                while (addingCommands) {
+                    if (animal.getCommands().getCommands().size() == allCommands.length) {
+                        System.out.println("Животное уже знает все команды");
+                        addingCommands = false;
+                    } else {
+                        System.out.println("Доступные команды:");
+                        int i = 1;
+                        for (Commands com : cmd) {
+                            if (!animal.getCommands().getCommands().contains(com)) {
+                                System.out.println(i + ". " + com);
+                                i++;
+                            }
+                        }
+
+                        System.out.println("0 - закончить ввод:");
+
+                        try {
+                            int choice = numberCheck(i - 1);
+                            Commands selectedCommand = cmd.get(choice - 1);
+                            animal.getCommands().addCommand(selectedCommand);
+                            cmd.remove(choice - 1);
+                        } catch (IllegalArgumentException e) {
+                            addingCommands = false;
                         }
                     }
-
-                    System.out.println("0 - Р·Р°РєРѕРЅС‡РёС‚СЊ РІРІРѕРґ:");
-
-                    try {
-                        int choice = numberCheck(i - 1);
-                        Commands selectedCommand = cmd.get(choice - 1);
-                        animal.getCommands().addCommand(selectedCommand);
-                        cmd.remove(choice - 1);
-                    } catch (IllegalArgumentException e) {
-                        addingCommands = false;
-                    }
                 }
-            }
         }
     }
 
     public static void addNewAnimal() {
+        Scanner scanner = new Scanner(System.in);
         String animalType;
 
         do {
-            System.out.println("РљР°РєРѕРµ Р¶РёРІРѕС‚РЅРѕРµ РІС‹ С…РѕС‚РёС‚Рµ РґРѕР±Р°РІРёС‚СЊ? Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ:\n" +
-                    "1. РљРѕС€РєР°\n" +
-                    "2. РЎРѕР±Р°РєР°\n" +
-                    "3. РҐРѕРјСЏРє\n" +
-                    "4. Р›РѕС€Р°РґСЊ\n" +
-                    "5. Р’РµСЂР±Р»СЋРґ\n" +
-                    "6. РћСЃРµР»");
+            System.out.println("Какое животное вы хотите добавить? Введите номер:\n" +
+                    "1. Кошка\n" +
+                    "2. Собака\n" +
+                    "3. Хомяк\n" +
+                    "4. Лошадь\n" +
+                    "5. Верблюд\n" +
+                    "6. Осел");
             animalType = scanner.nextLine();
 
             switch (animalType) {
@@ -190,30 +198,31 @@ public class Main {
                     MY_PACK_ANIMALS.add(new Donkey(setBirthDate(), getPetName()));
                     break;
                 default:
-                    System.out.println("Р’РІРµРґРµРЅРѕ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ");
+                    System.out.println("Введено некорректное значение");
             }
 
-            //scanner.nextLine();
         } while (!animalType.equals("1") && !animalType.equals("2") && !animalType.equals("3") &&
                 !animalType.equals("4") && !animalType.equals("5") && !animalType.equals("6"));
     }
 
     public static String getPetName() {
-        System.out.println("Р’РІРµРґРёС‚Рµ РёРјСЏ Р¶РёРІРѕС‚РЅРѕРіРѕ: ");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите имя животного: ");
         return scanner.nextLine();
     }
     public static LocalDate setBirthDate() {
+        Scanner scanner = new Scanner(System.in);
         LocalDate birthDate = null;
         boolean validInput = false;
 
         while (!validInput) {
-            System.out.println("Р’РІРµРґРёС‚Рµ РґР°С‚Сѓ СЂРѕР¶РґРµРЅРёСЏ РІ С„РѕСЂРјР°С‚Рµ dd.mm.yyyy:");
+            System.out.println("Введите дату рождения в формате dd.mm.yyyy:");
             String input = scanner.nextLine();
 
             String[] parts = input.split("\\.");
 
             if (parts.length != 3) {
-                System.out.println("РќРµРІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚ РґР°С‚С‹.");
+                System.out.println("Неверный формат даты.");
                 continue;
             }
 
@@ -223,15 +232,15 @@ public class Main {
                 int year = Integer.parseInt(parts[2]);
 
                 if (year < 1990) {
-                    throw new DateTimeException("Р“РѕРґ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РЅРµ РјРµРЅСЊС€Рµ 1990.");
+                    throw new DateTimeException("Год должен быть не меньше 1990.");
                 }
 
                 birthDate = LocalDate.of(year, month, day);
                 validInput = true;
             } catch (NumberFormatException e) {
-                System.out.println("Р’РІРµРґРµРЅС‹ РЅРµРІРµСЂРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ.");
+                System.out.println("Введены неверные значения.");
             } catch (DateTimeException e) {
-                System.out.println("РћС€РёР±РєР°: " + e.getMessage());
+                System.out.println("Ошибка: " + e.getMessage());
             }
         }
 
@@ -239,10 +248,11 @@ public class Main {
     }
 
     public static int numberCheck(int maxNumber) {
+        Scanner scanner = new Scanner(System.in);
         int number = 0;
 
         while (true) {
-            System.out.printf("Р’РІРµРґРёС‚Рµ С‡РёСЃР»Рѕ РѕС‚ 1 РґРѕ %d: ", maxNumber);
+            System.out.printf("Введите число от 1 до %d: ", maxNumber);
             try {
                 number = scanner.nextInt();
 
@@ -253,13 +263,12 @@ public class Main {
                 if (number >= 1 && number <= maxNumber) {
                     return number;
                 } else {
-                    System.out.printf("РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ РІРІРѕРґ.\n " +
-                            "Р’РІРµРґРёС‚Рµ С‡РёСЃР»Рѕ РѕС‚ 1 РґРѕ %d.%n", maxNumber);
+                    System.out.printf("Некорректный ввод.\n " +
+                            "Введите число от 1 до %d.%n", maxNumber);
                 }
             } catch (InputMismatchException e) {
-                scanner.nextLine();
-                System.out.printf("РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ РІРІРѕРґ.\n " +
-                        "Р’РІРµРґРёС‚Рµ С‡РёСЃР»Рѕ РѕС‚ 1 РґРѕ %d.%n", maxNumber);
+                System.out.printf("Некорректный ввод.\n " +
+                        "Введите число от 1 до %d.%n", maxNumber);
             }
         }
     }
