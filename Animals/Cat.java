@@ -12,6 +12,6 @@ public class Cat extends Pet {
 
     @Override
     public String getType() {
-        return this.type;
+        return Cat.type;
     }
 }

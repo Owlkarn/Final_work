@@ -9,4 +9,9 @@ public class Hamster extends Pet {
     public Hamster(LocalDate dateOfBirth, String name) {
         super(dateOfBirth, name);
     }
+
+    @Override
+    public String getType() {
+        return Hamster.type;
+    }
 }

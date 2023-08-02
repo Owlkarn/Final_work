@@ -1,5 +1,5 @@
 import Abstract.Animal;
-import Abstract.Pack_animal;
+import Abstract.PackAnimal;
 import Abstract.Pet;
 import Animals.*;
 import CommandsPack.Commands;
@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class Main {
     static ArrayList<Pet> MY_PETS = new ArrayList<>();
-    static ArrayList<Pack_animal> MY_PACK_ANIMALS = new ArrayList<>();
+    static ArrayList<PackAnimal> MY_PACK_ANIMALS = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -27,7 +27,7 @@ public class Main {
                     "1. Завести новое животное\n" +
                     "2. Посмотреть список команд животного\n" +
                     "3. Обучить животное новым командам\n" +
-                    "4. Посмотреть список животных\n");
+                    "4. Посмотреть список животных");
             String command = scanner.nextLine();
 
             switch (command){
@@ -66,7 +66,7 @@ public class Main {
         do {
             System.out.println("Выберите группу животных:\n" +
                     "1. Домашние животные\n" +
-                    "2. Вьючные животные\n");
+                    "2. Вьючные животные");
             animalType = scanner.nextLine();
 
             switch (animalType) {
@@ -89,14 +89,24 @@ public class Main {
     }
 
     public static Animal selectAnimal (ArrayList<Animal> list) {
+        if (list != null) {
+            System.out.println("Введите номер нужного животного:");
 
-        System.out.println("Введите номер нужного животного:");
+            watchAnimalList(list);
 
-        watchAnimalList(list);
-
-        int number = numberCheck(list.size()) - 1;
-
-        return list.get(number);
+            int number = 0;
+            boolean notZero = false;
+            while (!notZero){
+                try {
+                    number = numberCheck(list.size()) - 1;
+                    notZero = true;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Некорректный ввод.");
+                }
+            }
+            return list.get(number);
+        }
+        return null;
     }
 
     public static void watchAnimalCommands (Animal animal) {
@@ -110,7 +120,6 @@ public class Main {
         }
     }
 
-
     public static void addCommandToAnimal(Animal animal) {
         if (animal != null) {
             boolean addingCommands = true;
@@ -119,22 +128,30 @@ public class Main {
             cmd.addAll(Arrays.asList(allCommands));
 
             while (addingCommands) {
-                System.out.println("Доступные команды:");
-                for (Commands command : cmd) {
-                    System.out.println(cmd.indexOf(command) + 1 + ". " + command);
-                }
-
-                System.out.println("0 - закончить ввод:");
-                int choice = numberCheck(cmd.size());
-
-                if (choice == 0) {
+                if (animal.getCommands().getCommands().size() == allCommands.length) {
+                    System.out.println("Животное уже знает все команды");
                     addingCommands = false;
-                } else if (choice > 0 && choice <= cmd.size()) {
-                    Commands selectedCommand = cmd.get(choice - 1);
-                    animal.getCommands().addCommand(selectedCommand);
-                    cmd.remove(choice - 1);
-                } else {
-                    System.out.println("Введено неверное значение.");
+                }
+                else {
+                    System.out.println("Доступные команды:");
+                    int i = 1;
+                    for (Commands command : cmd) {
+                        if (!animal.getCommands().getCommands().contains(command)) {
+                            System.out.println(i + ". " + command);
+                            i++;
+                        }
+                    }
+
+                    System.out.println("0 - закончить ввод:");
+
+                    try {
+                        int choice = numberCheck(i - 1);
+                        Commands selectedCommand = cmd.get(choice - 1);
+                        animal.getCommands().addCommand(selectedCommand);
+                        cmd.remove(choice - 1);
+                    } catch (IllegalArgumentException e) {
+                        addingCommands = false;
+                    }
                 }
             }
         }
@@ -150,7 +167,7 @@ public class Main {
                     "3. Хомяк\n" +
                     "4. Лошадь\n" +
                     "5. Верблюд\n" +
-                    "6. Осел\n");
+                    "6. Осел");
             animalType = scanner.nextLine();
 
             switch (animalType) {
@@ -229,17 +246,22 @@ public class Main {
             try {
                 number = scanner.nextInt();
 
+                if (number == 0) {
+                    throw new IllegalArgumentException();
+                }
+
                 if (number >= 1 && number <= maxNumber) {
                     return number;
                 } else {
-                    System.out.printf("Некорректный ввод. Пожалуйста, введите число от 1 до %d.%n", maxNumber);
+                    System.out.printf("Некорректный ввод.\n " +
+                            "Введите число от 1 до %d.%n", maxNumber);
                 }
             } catch (InputMismatchException e) {
                 scanner.nextLine();
-                System.out.printf("Некорректный ввод. Пожалуйста, введите число от 1 до %d.%n", maxNumber);
+                System.out.printf("Некорректный ввод.\n " +
+                        "Введите число от 1 до %d.%n", maxNumber);
             }
         }
     }
-
 
 }
