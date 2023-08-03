@@ -19,7 +19,7 @@ public class Main {
         menu();
     }
 
-    public static void menu () {
+    private static void menu () {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("Выберите пункт меню:\n" +
@@ -48,17 +48,15 @@ public class Main {
         }
     }
 
-    public static void watchAnimalList(ArrayList<Animal> list) {
+    private static void watchAnimalList(ArrayList<Animal> list) {
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
-                System.out.println((i+1)+". " + list.get(i).getType() + " " + list.get(i).getName());
+                System.out.println((i+1)+". " + list.get(i).getType() + " " + list.get(i).getName() + " " + list.get(i).getDateOfBirth());
             }
         }
-
-
     }
 
-    public static ArrayList<Animal> animalListSelect() {
+    private static ArrayList<Animal> animalListSelect() {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Animal> list = new ArrayList<>();
         String animalType;
@@ -88,7 +86,7 @@ public class Main {
         return list;
     }
 
-    public static Animal selectAnimal (ArrayList<Animal> list) {
+    private static Animal selectAnimal (ArrayList<Animal> list) {
         if (list != null) {
             System.out.println("Введите номер нужного животного:");
 
@@ -109,7 +107,7 @@ public class Main {
         return null;
     }
 
-    public static void watchAnimalCommands (Animal animal) {
+    private static void watchAnimalCommands (Animal animal) {
         if (animal != null) {
             if (animal.getCommands().getCommands().size() == 0)
                 System.out.println("Животное не знает команд");
@@ -120,7 +118,7 @@ public class Main {
         }
     }
 
-    public static void addCommandToAnimal(Animal animal) {
+    private static void addCommandToAnimal(Animal animal) {
         if (animal != null) {
             boolean addingCommands = true;
             ArrayList<Commands> cmd = new ArrayList<>();
@@ -164,7 +162,7 @@ public class Main {
         }
     }
 
-    public static void addNewAnimal() {
+    private static void addNewAnimal() {
         Scanner scanner = new Scanner(System.in);
         String animalType;
 
@@ -205,12 +203,12 @@ public class Main {
                 !animalType.equals("4") && !animalType.equals("5") && !animalType.equals("6"));
     }
 
-    public static String getPetName() {
+    private static String getPetName() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите имя животного: ");
         return scanner.nextLine();
     }
-    public static LocalDate setBirthDate() {
+    private static LocalDate setBirthDate() {
         Scanner scanner = new Scanner(System.in);
         LocalDate birthDate = null;
         boolean validInput = false;
@@ -247,9 +245,9 @@ public class Main {
         return birthDate;
     }
 
-    public static int numberCheck(int maxNumber) {
+    private static int numberCheck(int maxNumber) {
         Scanner scanner = new Scanner(System.in);
-        int number = 0;
+        int number;
 
         while (true) {
             System.out.printf("Введите число от 1 до %d: ", maxNumber);
